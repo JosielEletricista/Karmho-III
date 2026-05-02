@@ -1,0 +1,55 @@
+using UnityEngine;
+using System.Collections;
+using UnityEngine.InputSystem;
+using UnityEditor.Experimental.GraphView;
+
+public class AttackPlayer : MonoBehaviour
+{
+    [Header("Referências")]
+    public GameObject attackZone;
+
+    [Header("Config")]
+    public float attackDuration = 0.2f;
+    public float attackCooldown = 0.4f;
+
+    private bool isAttacking = false;
+    private bool canAttack = true;
+
+    private float lastDirection = 1f; // 1 = direita, -1 = esquerda
+
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake()
+    {
+        attackZone.SetActive(false);
+    }
+
+    void Update()
+    {
+          
+    }
+   
+    public void InputAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed && canAttack)
+        {
+            StartCoroutine(AttackCoroutine());
+        }
+    }
+
+    IEnumerator AttackCoroutine()
+    {
+        canAttack = false;
+        isAttacking = true;
+
+        attackZone.SetActive(true);
+
+        yield return new WaitForSeconds(attackDuration);
+
+        attackZone.SetActive(false);
+        isAttacking = false;
+
+        yield return new WaitForSeconds(attackCooldown);
+        canAttack = true;
+    }
+}
