@@ -24,6 +24,15 @@ public class Movement : MonoBehaviour
     private float jumpBufferTime = 0.2f;
     private float jumpBufferCounter;
 
+    //Dash
+    [Header("Dash")]
+    [SerializeField] private float dashSpeed = 20f;
+    [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private float dashCooldown = 1f;
+    public bool canDash = true;
+    private bool isDashing;
+    private bool hasDashingInAir;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -35,6 +44,9 @@ public class Movement : MonoBehaviour
     {
         //Move void
         Move();
+
+        //Dash void
+        Dash();
 
         //Jumping
         if (IsGrounded())
@@ -95,5 +107,47 @@ public class Movement : MonoBehaviour
         isJumping = false;
     }
     #endregion
+
+    #region Dash
+    //Void para dash do jogador, usando o shift esquerdo para ativar o dash
+    void Dash()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && !isDashing)
+        {
+            if( !hasDashingInAir)
+            {
+                StartCoroutine(DashCoroutine());
+            }
+
+        }
+    }
+
+    //Corrotina para o dash do jogador, desativando a gravidade e a velocidade horizontal durante o dash, e depois reativando a gravidade e a velocidade horizontal após o dash
+    IEnumerator DashCoroutine()
+    {
+       canDash = false;
+       isDashing = true;
+        
+        float originalGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
+        
+        rb.linearVelocityX = transform.localScale.x * dashSpeed;
+        /*
+        if(rb.linearVelocity.y > 0f)
+        {
+            hasDashingInAir = true;
+        }
+        */
+
+        yield return new WaitForSeconds(dashDuration);
+        rb.gravityScale = originalGravity;
+        rb.linearVelocityX = 0f;
+        isDashing = false;
+
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;
+    }
+    #endregion
+
 
 }
