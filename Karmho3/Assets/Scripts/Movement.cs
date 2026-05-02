@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.InputSystem;
+using UnityEditor.Experimental.GraphView;
 
 public class Movement : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class Movement : MonoBehaviour
     //Xmove
     [Header("Xmove")]
     [SerializeField] private float speed = 5f; // Speed of movement
+    private Vector2 direction; // Direction of movement
+    private bool isFacingRight = true; // To track the facing direction of the player
 
     //Jump
     [Header("Jump")]
@@ -44,11 +48,10 @@ public class Movement : MonoBehaviour
     {
         //Move void
         Move();
+        //Flip void
+        Flip();
 
-        //Dash void
-        Dash();
-
-        //Jumping
+        //Jump
         if (IsGrounded())
         {
             coyoteTimeCounter = coyoteTime;
@@ -57,8 +60,31 @@ public class Movement : MonoBehaviour
         {
             coyoteTimeCounter -= Time.deltaTime;
         }
+    }
 
-        if (Input.GetButtonDown("Jump"))
+    #region MoveX/Jump
+    
+    //Variavel que define se esta no chão ou não, usando um circulo para detectar o chão
+    private bool IsGrounded()
+    {
+        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+    }
+
+    public void InputMove(InputAction.CallbackContext context)
+    {
+        direction = context.ReadValue<Vector2>();
+    }
+
+    //Void para movimentação horizontal do jogador
+    void Move()
+    {
+        Vector3 movement = new Vector3(direction.x, 0, 0);
+        transform.position += movement * speed * Time.deltaTime;
+    }
+
+    public void Jump(InputAction.CallbackContext context)
+    {      
+        if (context.performed)
         {
             jumpBufferCounter = jumpBufferTime;
         }
@@ -76,27 +102,12 @@ public class Movement : MonoBehaviour
             StartCoroutine(JumpCooldown());
         }
 
-        if (Input.GetButtonUp("Jump") && rb.linearVelocity.y > 0f)
+        if (context.performed && rb.linearVelocity.y > 0f)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
 
             coyoteTimeCounter = 0f;
         }
-    }
-
-    #region MoveX/Jump
-
-    //Variavel que define se esta no chão ou não, usando um circulo para detectar o chão
-    private bool IsGrounded()
-    {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-    }
-
-    //Void para movimentação horizontal do jogador
-    void Move()
-    {
-        Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
-        transform.position += movement * speed * Time.deltaTime;
     }
 
     //Corrotina para evitar que o jogador possa pular novamente enquanto estiver no ar
@@ -106,15 +117,29 @@ public class Movement : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         isJumping = false;
     }
+    
+    private void Flip()
+    {
+        if (direction.x > 0f && !isFacingRight)
+        {
+            transform.localScale = new Vector3(1f, 1f, 1f);
+            isFacingRight = true;
+        }
+        else if (direction.x < 0f && isFacingRight)
+        {
+            transform.localScale = new Vector3(-1f, 1f, 1f);
+            isFacingRight = false;
+        }
+    }
     #endregion
 
     #region Dash
     //Void para dash do jogador, usando o shift esquerdo para ativar o dash
-    void Dash()
+    public void InputDash(InputAction.CallbackContext context)
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && !isDashing)
+        if (context.performed && canDash && !isDashing)
         {
-            if( !hasDashingInAir)
+            if(!hasDashingInAir)
             {
                 StartCoroutine(DashCoroutine());
             }
@@ -131,7 +156,9 @@ public class Movement : MonoBehaviour
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
         
-        rb.linearVelocityX = transform.localScale.x * dashSpeed;
+        float dashDirection = isFacingRight ? 1f : -1f; 
+        rb.linearVelocityX = dashDirection * dashSpeed;
+        
         /*
         if(rb.linearVelocity.y > 0f)
         {
