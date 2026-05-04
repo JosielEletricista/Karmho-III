@@ -1,8 +1,11 @@
 using UnityEngine;
+using System.Collections;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private Transform target; // The target the camera will follow
+    [SerializeField] private float shakeDuration = 0.5f; // Duration of the camera shake
+    public bool startShake = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -14,6 +17,11 @@ public class CameraController : MonoBehaviour
     void Update()
     {
         CameraFollow();
+        if (startShake)
+        {
+            StartCoroutine(ShakeCamera());
+            startShake = false; // Reset the shake trigger
+        }
     }
 
     void CameraFollow()
@@ -21,4 +29,22 @@ public class CameraController : MonoBehaviour
         transform.position = new Vector3(target.position.x, target.position.y, transform.position.z);
     }
 
+    #region ShakeCamera
+
+    IEnumerator ShakeCamera()
+    {
+        Vector3 originalPosition = transform.position;
+        float elapsed = 0.0f;
+        while (elapsed < shakeDuration)
+        {
+            transform.position = originalPosition + Random.insideUnitSphere * 0.5f; // Adjust the shake intensity as needed
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = originalPosition;
+    }
+
+
+
+    #endregion
 }
