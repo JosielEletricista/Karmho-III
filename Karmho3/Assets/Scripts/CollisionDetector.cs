@@ -16,11 +16,13 @@ public class CollisionDetector : MonoBehaviour
         {
             Camera.main.GetComponent<CameraController>().startShake = true;
 
-            // Agora pega a direção correta
-            Knockback(collision.transform, knockbackForce);
+
+            Knockback(collision.transform, knockbackForce); //Kockback apos ser atingido
+            Camera.main.GetComponent<Hitstop>().Stop(0.2f); //Hitstop apos ser atingido
         }
     }
 
+    //void para aplicar o knockback ao personagem, recebendo a posição do inimigo e a força do knockback
     public void Knockback(Transform colliderTransform, float knockbackForce)
     {
         Vector2 direction = (transform.position - colliderTransform.position).normalized;
