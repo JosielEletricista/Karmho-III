@@ -20,7 +20,7 @@ public class Movement : MonoBehaviour
     //Jump
     [Header("Jump")]
     [SerializeField] private float jumpingPower = 16f;
-    private bool isJumping;
+    public bool isJumping;
 
     private float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
@@ -102,7 +102,7 @@ public class Movement : MonoBehaviour
             StartCoroutine(JumpCooldown());
         }
 
-        if (context.performed && rb.linearVelocity.y > 0f)
+        if (context.canceled && rb.linearVelocity.y > 0f)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
 

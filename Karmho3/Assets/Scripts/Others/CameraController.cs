@@ -6,13 +6,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Transform target; // The target the camera will follow
     [SerializeField] private float shakeDuration = 0.5f; // Duration of the camera shake
     public bool startShake = false;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
+   
     // Update is called once per frame
     void Update()
     {
@@ -24,10 +18,14 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    #region CameraFollow
+
     void CameraFollow()
     {
         transform.position = new Vector3(target.position.x, target.position.y, transform.position.z);
     }
+
+    #endregion
 
     #region ShakeCamera
 

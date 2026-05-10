@@ -24,11 +24,6 @@ public class AttackPlayer : MonoBehaviour
         attackZone.SetActive(false);
     }
 
-    void Update()
-    {
-          
-    }
-   
     public void InputAttack(InputAction.CallbackContext context)
     {
         if (context.performed && canAttack)
