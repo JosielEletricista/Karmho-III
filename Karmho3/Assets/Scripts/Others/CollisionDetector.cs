@@ -14,10 +14,11 @@ public class CollisionDetector : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Sword"))
         {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
             Camera.main.GetComponent<CameraController>().startShake = true;
 
 
-            Knockback(collision.transform, knockbackForce); //Kockback apos ser atingido
+            Knockback(player.transform, knockbackForce); //Kockback apos ser atingido
             Camera.main.GetComponent<Hitstop>().Stop(0.2f); //Hitstop apos ser atingido
         }
     }
