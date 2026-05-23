@@ -3,7 +3,12 @@ using System.Collections;
 
 public class CameraController : MonoBehaviour
 {
+    [Header("Camera Follow Settings")]
     [SerializeField] private Transform target; // The target the camera will follow
+    [SerializeField] float minX, maxX;
+    [SerializeField] float minY, maxY;
+
+    [Header("Camera Shake Settings")]
     [SerializeField] private float shakeDuration = 0.5f; // Duration of the camera shake
     public bool startShake = false;
    
@@ -23,6 +28,8 @@ public class CameraController : MonoBehaviour
     void CameraFollow()
     {
         transform.position = new Vector3(target.position.x, target.position.y, transform.position.z);
+
+        transform.position = new Vector3(Mathf.Clamp(transform.position.x, minX, maxX), Mathf.Clamp(transform.position.y, minY, maxY), transform.position.z);
     }
 
     #endregion

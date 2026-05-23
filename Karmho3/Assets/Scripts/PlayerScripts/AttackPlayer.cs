@@ -15,7 +15,7 @@ public class AttackPlayer : MonoBehaviour
     private bool isAttacking = false;
     private bool canAttack = true;
 
-    private float lastDirection = 1f; // 1 = direita, -1 = esquerda
+    //private float lastDirection = 1f; // 1 = direita, -1 = esquerda
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
