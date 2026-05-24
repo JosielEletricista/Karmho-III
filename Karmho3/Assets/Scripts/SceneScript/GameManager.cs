@@ -18,12 +18,14 @@ public class GameMenager : MonoBehaviour
     [SerializeField] private string cenaSplash = "CenaSplash";
     [SerializeField] private string cenaMenu = "MenuPrincipal";
     [SerializeField] private string cenaGameplay = "GetStarted_Scene";
+    private PlayerStats _playerStats;
 
     [Header("Status")]
     public GameState estadoAtual;
-
+    public int managerReliquias;
     private PlayerInput _playerInputNaCena;
 
+    
     private void Awake()
     {
         ConfigurarSingleton();
@@ -96,6 +98,12 @@ public class GameMenager : MonoBehaviour
     public void CarregarCena(string nomeDaCena)
     {
         // Inscreve no evento antes de carregar
+        _playerStats = FindFirstObjectByType<PlayerStats>();
+        if (_playerStats != null)
+        {
+            managerReliquias = _playerStats.reliquias;
+            Debug.Log($"<color=yellow>[GameManager]</color> Reliquias salvas: {managerReliquias}");
+        }
         SceneManager.sceneLoaded += AoTerminarDeCarregar;
         SceneManager.LoadScene(nomeDaCena);
     }

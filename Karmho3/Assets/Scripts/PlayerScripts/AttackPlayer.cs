@@ -9,12 +9,11 @@ public class AttackPlayer : MonoBehaviour
     public GameObject attackZone;
 
     [Header("Config")]
-    public float attackDuration = 0.2f;
-    public float attackCooldown = 0.4f;
+    [SerializeField] private float attackDuration = 0.2f;
+    [SerializeField] private float attackCooldown = 0.4f;
+    public bool canAttack = true;
 
     private bool isAttacking = false;
-    private bool canAttack = true;
-
     //private float lastDirection = 1f; // 1 = direita, -1 = esquerda
 
 

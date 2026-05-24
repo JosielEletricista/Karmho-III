@@ -13,11 +13,20 @@ public class PlayerStats : MonoBehaviour
     [Header("Player Stats")]
     [SerializeField] private int potions = 3;
     private int maxPotions = 3;
-    [SerializeField] private int reliquias = 0;    
-    private float health = 50f;
+    public int reliquias = 0;    
+    private float health = 100f;
     private float mana = 100f;
+    private GameMenager gameMenager;
 
- 
+    private void Awake()
+    {
+        gameMenager = GameMenager.Instance;
+        if(gameMenager.managerReliquias != reliquias)
+        {
+            reliquias = gameMenager.managerReliquias;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {

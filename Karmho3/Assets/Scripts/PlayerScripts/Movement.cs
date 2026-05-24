@@ -10,6 +10,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
+    private PlayerStats playerStats;
 
     //Xmove
     [Header("Xmove")]
@@ -40,7 +41,7 @@ public class Movement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        playerStats = GetComponent<PlayerStats>();
     }
 
     // Update is called once per frame
@@ -137,7 +138,7 @@ public class Movement : MonoBehaviour
     //Void para dash do jogador, usando o shift esquerdo para ativar o dash
     public void InputDash(InputAction.CallbackContext context)
     {
-        if (context.performed && canDash && !isDashing)
+        if (context.performed && canDash && !isDashing && playerStats.reliquias > 0)
         {
             if(!hasDashingInAir)
             {
@@ -152,7 +153,8 @@ public class Movement : MonoBehaviour
     {
        canDash = false;
        isDashing = true;
-        
+        GetComponent<AttackPlayer>().canAttack = false; // Impede o jogador de atacar durante o dash
+
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
         
@@ -170,6 +172,7 @@ public class Movement : MonoBehaviour
         rb.gravityScale = originalGravity;
         rb.linearVelocityX = 0f;
         isDashing = false;
+        GetComponent<AttackPlayer>().canAttack = true; // Permite o jogador de atacar novamente após o dash
 
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
