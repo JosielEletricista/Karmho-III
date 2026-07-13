@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
@@ -48,6 +49,16 @@ public class PlayerStats : MonoBehaviour
         if (health > 100f)
         {
             health = 100f;
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0f)
+        {
+            health = 0f;
+            
         }
     }
 
