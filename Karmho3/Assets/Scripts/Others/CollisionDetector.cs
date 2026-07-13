@@ -6,11 +6,13 @@ public class CollisionDetector : MonoBehaviour
     //Variáveis para o knockback
     private Rigidbody2D selfRig;
     public float knockbackForce = 5f;
+    public AudioClip selfHurtAudio;
 
     //Variáveis para o flash de dano
     private SpriteRenderer sprite;
     private Color flashColor = Color.white;
     private float flashTime = 0.1f;
+    private AudioSource audioSource;
 
     private Color originalColor;
 
@@ -18,6 +20,7 @@ public class CollisionDetector : MonoBehaviour
     {
         selfRig = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
         originalColor = sprite.color;
     }
 
@@ -27,7 +30,7 @@ public class CollisionDetector : MonoBehaviour
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             Camera.main.GetComponent<CameraController>().startShake = true;
-
+            audioSource.PlayOneShot(selfHurtAudio); //Toca o som de dano
 
             Knockback(player.transform, knockbackForce); //Kockback apos ser atingido
             Camera.main.GetComponent<Hitstop>().Stop(0.2f); //Hitstop apos ser atingido

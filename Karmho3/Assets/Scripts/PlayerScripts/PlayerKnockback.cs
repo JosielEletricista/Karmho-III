@@ -6,15 +6,18 @@ public class PlayerKnockback : MonoBehaviour
     private Rigidbody2D rb;
     private bool isKnocked = false;
     private Movement movementScript;
+    private AudioSource audioSource;
     [SerializeField] private int knockbackForce = 10;
     [SerializeField] private float knockbackTime = 0.5f;
     [SerializeField] private float verticalMultiplier = 1.3f;
+    [SerializeField] private AudioClip knockbackSound;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();   
         movementScript = GetComponent<Movement>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     
@@ -29,6 +32,7 @@ public class PlayerKnockback : MonoBehaviour
     private IEnumerator KnockbackRoutine(Vector3 attackerPosition)
     {
         isKnocked = true;
+        audioSource.PlayOneShot(knockbackSound); // Toca o som de knockback
 
         movementScript.enabled = false; // Desativa o script de movimento para evitar conflitos durante o knockback
         Camera.main.GetComponent<CameraController>().startShake = true;
