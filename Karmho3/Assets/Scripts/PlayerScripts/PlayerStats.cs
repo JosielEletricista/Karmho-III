@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class PlayerStats : MonoBehaviour
 
     [Header("Player Stats")]
     [SerializeField] private int potions = 3;
+    private Transform playerTransform;
     private int maxPotions = 3;
     public int reliquias = 0;    
     private float health = 100f;
@@ -28,12 +30,22 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        playerTransform = GetComponent<Transform>();
+    }
+
     // Update is called once per frame
     void Update()
     {
         healthSlider.value = health;
         manaSlider.value = mana;
         UpdatePotionUI();
+
+        if(playerTransform.position.y < -10f)
+        {
+            StartCoroutine(Die());
+        }
     }
 
     #region Life
@@ -58,8 +70,16 @@ public class PlayerStats : MonoBehaviour
         if (health <= 0f)
         {
             health = 0f;
-            
+            StartCoroutine(Die());
         }
+    }
+
+    private IEnumerator Die()
+    {
+        Movement playerMovement = GetComponent<Movement>();
+        playerMovement.enabled = false;
+        yield return new WaitForSeconds(1f);
+        GameMenager.Instance.CarregarCena("HUB");
     }
 
     #endregion

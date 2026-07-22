@@ -6,6 +6,7 @@ public class PlayerKnockback : MonoBehaviour
     private Rigidbody2D rb;
     private bool isKnocked = false;
     private Movement movementScript;
+    private AttackPlayer attackPlayerScript;
     private AudioSource audioSource;
     [SerializeField] private int knockbackForce = 10;
     [SerializeField] private float knockbackTime = 0.5f;
@@ -17,6 +18,7 @@ public class PlayerKnockback : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();   
         movementScript = GetComponent<Movement>();
+        attackPlayerScript = GetComponent<AttackPlayer>();
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -35,6 +37,7 @@ public class PlayerKnockback : MonoBehaviour
         audioSource.PlayOneShot(knockbackSound); // Toca o som de knockback
 
         movementScript.enabled = false; // Desativa o script de movimento para evitar conflitos durante o knockback
+        attackPlayerScript.enabled = false; // Desativa o script de ataque para evitar que o jogador ataque durante o knockback
         Camera.main.GetComponent<CameraController>().startShake = true;
         Vector2 direction = (transform.position - attackerPosition).normalized;
 
@@ -51,6 +54,7 @@ public class PlayerKnockback : MonoBehaviour
         yield return new WaitForSeconds(knockbackTime);
 
         movementScript.enabled = true; // Reativa o script de movimento após o knockback
+        attackPlayerScript.enabled = true; // Reativa o script de ataque após o knockback
         isKnocked = false;
     }
 }

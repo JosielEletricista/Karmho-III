@@ -2755,6 +2755,10 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1617867728}
+    - target: {fileID: 2244057982591588659, guid: 2c22b637d19eea74e88348ce09de39ef, type: 3}
+      propertyPath: startShake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7295846642466119116, guid: 2c22b637d19eea74e88348ce09de39ef, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

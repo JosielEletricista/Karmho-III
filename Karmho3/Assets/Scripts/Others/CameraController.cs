@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
 
     [Header("Camera Shake Settings")]
     [SerializeField] private float shakeDuration = 0.5f; // Duration of the camera shake
+    public AnimationCurve shakeCurve;
     public bool startShake = false;
    
     // Update is called once per frame
@@ -41,9 +42,10 @@ public class CameraController : MonoBehaviour
         Vector3 originalPosition = transform.position;
         float elapsed = 0.0f;
         while (elapsed < shakeDuration)
-        {
-            transform.position = originalPosition + Random.insideUnitSphere * 0.5f; // Adjust the shake intensity as needed
+        {           
             elapsed += Time.deltaTime;
+            float strenght = shakeCurve.Evaluate(elapsed / shakeDuration);
+            transform.position = originalPosition + Random.insideUnitSphere * strenght; // Adjust the shake intensity as needed
             yield return null;
         }
         transform.position = originalPosition;
