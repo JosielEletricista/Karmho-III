@@ -13,8 +13,8 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
+  - Fundo
+  - TilePrincipal
   - 
   - 
   - 
@@ -40,8 +40,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Fundo
+    uniqueID: 2594430105
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Principal
+    uniqueID: 1833674477
     locked: 0
   m_RenderingLayers:
   - Default
